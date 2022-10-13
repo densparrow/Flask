@@ -5,18 +5,26 @@ from datetime import datetime
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'jlsdfghusr'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
+app.config['SQLACHEMY_TRACK_MODIFICATIONS'] = False
+
 db = SQLAlchemy(app)
 
-# class Article(db.Model):
-#     id = db.Column(db.Integer, primery_key=True)
-#     title = db.Column(db.String(100), nullabale=False)
-#     intro = db.Column(db.String(300), nullabel=False)
-#     text = db.Column(db.Text, nullabel=False)
-#     date = db.Column(db.Datetime, default=datetime.utcnow)
+class Article(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    city = db.Column(db.String(100))
+    title = db.Column(db.String(100), nullable=False)
+    intro = db.Column(db.String(300), nullable=False)
+    text = db.Column(db.Text, nullable=False)
+    date = db.Column(db.DateTime, default=datetime.utcnow)
 
-menu = [{"title" : "Установка", "url": "install-flask"},
-        {"title": "Первое приложение", "url": "fist-app"},
-        {"title": "Обратная связь", "url": "contact"}]
+
+    def __repr__(self):
+        return f"<Article{self.id}>"
+
+
+menu = [{"name" : "Установка", "url": "install-flask"},
+        {"name": "Первое приложение", "url": "fist-app"},
+        {"name": "Обратная связь", "url": "contact"}]
 
 @app.route('/')
 def index():
