@@ -43,8 +43,13 @@ def create_article():
 
 @app.route('/posts')
 def posts():
-    articles = Article.query.order_by(Article.date).all()
+    articles = Article.query.order_by(Article.date.desc()).all()
     return render_template('posts.html', title='Статьи', articles=articles)
+
+@app.route('/posts/<int:id>')
+def posts_detail(id):
+    article = Article.query.get(id)
+    return render_template('posts_detail.html', title='Подробнее', article=article)
 
 menu = [{"name" : "Установка", "url": "install-flask"},
         {"name": "Первое приложение", "url": "fist-app"},
