@@ -21,6 +21,30 @@ class Article(db.Model):
     def __repr__(self):
         return f"<Article{self.id}>"
 
+@app.route('/create_article', methods=['POST', 'GET'])
+def create_article():
+    if request.method == "POST":
+        title = request.form['title']
+        city = request.form['city']
+        intro = request.form['intro']
+        text = request.form['text']
+
+        article = Article(title=title, city=city, intro=intro, text=text)
+
+        try:
+            db.session.add(article)
+            db.session.commit()
+            return redirect('/posts')
+        except:
+            return f"При добавлении статьи произошла ошибка"
+
+    else:
+        return render_template('create_article.html', title='Добавление статьи', menu=menu)
+
+@app.route('/posts')
+def posts():
+    articles = Article.query.order_by(Article.date).all()
+    return render_template('posts.html', title='Статьи', articles=articles)
 
 menu = [{"name" : "Установка", "url": "install-flask"},
         {"name": "Первое приложение", "url": "fist-app"},
@@ -45,9 +69,7 @@ def contact():
 
     return render_template('contact.html', title='Обратная связь', menu=menu)
 
-@app.route('/user/<string:name>/<int:id>')
-def user(name, id):
-    return "User page" + name + '-' + id
+
 
 # @app.route('/profile/<username>')
 # def profile(username):
