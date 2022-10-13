@@ -39,7 +39,7 @@ def create_article():
             return f"При добавлении статьи произошла ошибка"
 
     else:
-        return render_template('create_article.html', title='Добавление статьи', menu=menu)
+        return render_template('create_article.html', title='Добавление статьи')
 
 @app.route('/posts')
 def posts():
@@ -50,6 +50,37 @@ def posts():
 def posts_detail(id):
     article = Article.query.get(id)
     return render_template('posts_detail.html', title='Подробнее', article=article)
+
+@app.route('/posts/<int:id>/delete')
+def post_delete(id):
+    article = Article.query.get_or_404(id)
+
+    try:
+        db.session.delete(article)
+        db.session.commit()
+        return redirect('/posts')
+    except:
+        return "При удалении статьи произошла ошибка"
+
+@app.route('/posts/<int:id>/update', methods=['POST', 'GET'])
+def post_update(id):
+    article = Article.query.get(id)
+    if request.method == "POST":
+        article.title = request.form['title']
+        article.city = request.form['city']
+        article.intro = request.form['intro']
+        article.text = request.form['text']
+
+        try:
+            db.session.commit()
+            return redirect('/posts')
+        except:
+            return f"При обновлении статьи произошла ошибка"
+
+    else:
+        article = Article.query.get(id)
+        return render_template('post_update.html', title='Редактирование статьи', article=article)
+
 
 menu = [{"name" : "Установка", "url": "install-flask"},
         {"name": "Первое приложение", "url": "fist-app"},

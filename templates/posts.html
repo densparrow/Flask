@@ -4,7 +4,8 @@
 <div class="container">
     <h1>Все статьи на сайте</h1>
 </div>
-{% for el in articles %}
+{% if articles|length > 0 %}
+    {% for el in articles %}
 <div class="alert alert-info">
     <h2>{{el.title}}</h2>
     <p>{{el.city}}</p>
@@ -12,5 +13,8 @@
     <p><b>Дата:{{el.date.date()}}</b></p>
     <a href="/posts/{{el.id}}" class="btn btn-warning">Подробнее</a>
 </div>
-{% endfor %}
+    {% endfor %}
+{% else %}
+<p>У нас нет статей на сайте</p>
+{% endif %}
 {%endblock%}
